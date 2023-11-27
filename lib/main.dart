@@ -7,6 +7,9 @@ import 'package:vna_dcm_flutter/src/views/login/LoginScreen.dart';
 import 'package:dio/dio.dart';
 
 Future<void> main() async {
+  // gọi để lấy session
+  await Constant.client.get(
+      "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin");
   await Constant.client.get(
       "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin");
   runApp(const LoginScreen());
