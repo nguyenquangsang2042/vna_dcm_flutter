@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:vna_dcm_flutter/src/utils/Constant.dart';
 
 // Sự kiện (Event)
 abstract class LoginEvent extends Equatable {
@@ -47,7 +48,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is LoginButtonPressed) {
       yield LoginLoading();
-
+      await Constant.client.get(
+          "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin");
       // Thực hiện xử lý đăng nhập ở đây (ví dụ: kiểm tra username/password)
       // Giả sử đăng nhập thành công nếu username và password đều là "admin"
       if (event.username == "admin" && event.password == "admin") {
