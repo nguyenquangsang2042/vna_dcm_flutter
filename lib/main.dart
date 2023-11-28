@@ -16,16 +16,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Constant.client.get(
       "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin");
-  Constant.userName= (await SharedPreferencesUtil().getUser());
-  Constant.passWord= (await SharedPreferencesUtil().getPassword());
-  LoginState state = Constant.userName==""||Constant.passWord==""?LoginLoading():LoginFailure(error: "");
-  runApp(MaterialApp(home: MultiBlocProvider(
-    providers: [
-      BlocProvider<LoginBloc>(
-        create: (context) => LoginBloc(state),
-      ),
-      // Add more BlocProviders if needed
-    ],
-    child: const RootScreen(),
-  ),));
+  Constant.userName = (await SharedPreferencesUtil().getUser());
+  Constant.passWord = (await SharedPreferencesUtil().getPassword());
+  LoginState state = Constant.userName == "" || Constant.passWord == ""
+      ? LoginLoading()
+      : LoginFailure(error: "");
+  runApp(MaterialApp(
+    home: MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(state),
+        ),
+      ],
+      child: const RootScreen(),
+    ),
+  ));
 }

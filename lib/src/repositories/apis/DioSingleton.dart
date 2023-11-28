@@ -29,6 +29,7 @@ class DioSingleton {
         onRequest: (options, handler) {
           // Do something before request is sent
           logger.i('REQUEST[${options.method}] => PATH: ${options.path}');
+          logger.i('REQUEST PostData ${options.data}');
           return handler.next(options);
         },
         onResponse: (response, handler) {

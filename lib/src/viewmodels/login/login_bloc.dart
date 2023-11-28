@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vna_dcm_flutter/src/utils/Constant.dart';
 
@@ -47,11 +50,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginFailure(error: "Username or password is null or empty"));
       }
       else {
+        var data = FormData.fromMap({
+          'data': '{"Username":"${event.username}","Password":"${event.password}"}'
+        });
         await Constant.client
             .post(
-            "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin")
+            "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin",data: data)
             .then((value) {
-          if (event.username == "admin" && event.password == "admin") {
+          if (value.toString().contains("Success")) {
             emit(LoginSuccess());
           } else {
             emit(LoginFailure(error: "Invalid username or password"));
