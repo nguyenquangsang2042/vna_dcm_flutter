@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:vna_dcm_flutter/src/repositories/apis/api_service.dart';
 import 'package:vna_dcm_flutter/src/utils/Constant.dart';
 
 // Sự kiện (Event)
@@ -53,7 +54,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         var data = FormData.fromMap({
           'data': '{"Username":"${event.username}","Password":"${event.password}"}'
         });
-        await Constant.client
+        await ApiService
             .post(
             "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin",data: data)
             .then((value) {
