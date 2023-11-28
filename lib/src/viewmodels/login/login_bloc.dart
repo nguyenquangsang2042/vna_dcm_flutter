@@ -39,24 +39,25 @@ class LoginFailure extends LoginState {
 
 // Bloc
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc(super.initialState);
-
-  @override
-  LoginState get initialState => LoginLoading();
-
-  @override
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is LoginButtonPressed) {
-      yield LoginLoading();
-      await Constant.client.get(
-          "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin");
-      // Thực hiện xử lý đăng nhập ở đây (ví dụ: kiểm tra username/password)
-      // Giả sử đăng nhập thành công nếu username và password đều là "admin"
-      if (event.username == "admin" && event.password == "admin") {
-        yield LoginSuccess();
-      } else {
-        yield LoginFailure(error: "Invalid username or password");
+  LoginBloc(LoginState state) : super(state) {
+    on<LoginButtonPressed>((event, emit) async {
+      emit(LoginLoading());
+      if (event.username == "" ||
+          event.password == "") {
+        emit(LoginFailure(error: "Username or password is null or empty"));
       }
-    }
+      else {
+        await Constant.client
+            .post(
+            "https://vnadmsuatportal.vuthao.com/psd/api/ApiMobile.ashx?func=AdfsLogin")
+            .then((value) {
+          if (event.username == "admin" && event.password == "admin") {
+            emit(LoginSuccess());
+          } else {
+            emit(LoginFailure(error: "Invalid username or password"));
+          }
+        });
+      }
+    });
   }
 }

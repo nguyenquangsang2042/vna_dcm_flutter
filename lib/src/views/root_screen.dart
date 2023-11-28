@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vna_dcm_flutter/src/views/login/LoginScreen.dart';
 import 'package:vna_dcm_flutter/src/widgets/LoadingWidget.dart';
 
@@ -19,6 +20,15 @@ class RootScreen extends StatelessWidget {
           } else if (state is LoginSuccess) {
             return Container();
           } else {
+            Fluttertoast.showToast(
+              msg: (state as LoginFailure).error, // Display the error message from the state.
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
             return LoginScreen();
           }
         },

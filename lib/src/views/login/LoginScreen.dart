@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../viewmodels/login/login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController(text: 'vnadmsuat.adminsite');
+  final TextEditingController _passwordController = TextEditingController(text: 'vnadmsuat@123\$%');
+  LoginBloc? _loginBloc;
+
   @override
   Widget build(BuildContext context) {
+    _loginBloc=BlocProvider.of<LoginBloc>(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -51,7 +57,12 @@ class LoginScreen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: 40,
                   child:  ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _loginBloc?.add(LoginButtonPressed(
+                        username: _usernameController.text, // Replace with actual username input
+                        password: _passwordController.text, // Replace with actual password input
+                      ));
+                    },
                     child: Text('Đăng nhập'),
                   ),
                 )
