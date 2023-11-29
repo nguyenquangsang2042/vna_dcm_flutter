@@ -7,6 +7,7 @@ import 'package:vna_dcm_flutter/src/widgets/LoadingWidget.dart';
 
 import '../utils/Constant.dart';
 import '../viewmodels/login/login_bloc.dart';
+import 'dashboard/dashboard_screen.dart';
 
 class RootScreen extends StatelessWidget {
   const RootScreen({super.key});
@@ -19,7 +20,7 @@ class RootScreen extends StatelessWidget {
           if (state is LoginLoading) {
             return const LoadingWidget();
           } else if (state is LoginSuccess) {
-            return Container();
+            return DashboardScreen();
           } else {
             if((state as LoginFailure).error!="")
               {
