@@ -7,16 +7,16 @@ import 'package:floor/floor.dart';
 @entity
 class DocumentAreaCategory {
   @primaryKey
-  final int ID;
-  final String Title;
-  final String TitleEN;
-  final String Url;
-  final int ParentId;
-  final int Rank;
-  final String Description;
-  final String Image;
-  final String Created;
-  final String Modified;
+  int ID;
+  String Title;
+  String TitleEN;
+  String Url;
+  int ParentId;
+  int Rank;
+  String Description;
+  String Image;
+  String Created;
+  String Modified;
   DocumentAreaCategory(
     this.ID,
     this.Title,
@@ -32,7 +32,7 @@ class DocumentAreaCategory {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'ID': ID});
     result.addAll({'Title': Title});
     result.addAll({'TitleEN': TitleEN});
@@ -43,7 +43,7 @@ class DocumentAreaCategory {
     result.addAll({'Image': Image});
     result.addAll({'Created': Created});
     result.addAll({'Modified': Modified});
-  
+
     return result;
   }
 
@@ -64,5 +64,6 @@ class DocumentAreaCategory {
 
   String toJson() => json.encode(toMap());
 
-  factory DocumentAreaCategory.fromJson(String source) => DocumentAreaCategory.fromMap(json.decode(source));
+  factory DocumentAreaCategory.fromJson(String source) =>
+      DocumentAreaCategory.fromMap(json.decode(source));
 }

@@ -1,14 +1,15 @@
 import 'dart:convert';
 
 import 'package:floor/floor.dart';
+
 @entity
 class DocumentType {
   @primaryKey
-  final int ID;
-  final String Title;
-  final String TitleEN;
-  final int LangId;
-  final String Url;
+  int ID;
+  String Title;
+  String TitleEN;
+  int LangId;
+  String Url;
   DocumentType({
     required this.ID,
     required this.Title,
@@ -19,13 +20,13 @@ class DocumentType {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'ID': ID});
     result.addAll({'Title': Title});
     result.addAll({'TitleEN': TitleEN});
     result.addAll({'LangId': LangId});
     result.addAll({'Url': Url});
-  
+
     return result;
   }
 
@@ -41,5 +42,6 @@ class DocumentType {
 
   String toJson() => json.encode(toMap());
 
-  factory DocumentType.fromJson(String source) => DocumentType.fromMap(json.decode(source));
+  factory DocumentType.fromJson(String source) =>
+      DocumentType.fromMap(json.decode(source));
 }

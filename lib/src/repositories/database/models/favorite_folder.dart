@@ -3,17 +3,18 @@
 import 'dart:convert';
 
 import 'package:floor/floor.dart';
+
 @entity
 class FavoriteFolder {
   @primaryKey
-  final String ID;
-  final String Title;
-  final String ParentId;
-  final int Rank;
-  final String ResourceUrl;
-  final String CreatedBy;
-  final String Modified;
-  final String Created;
+  String ID;
+  String Title;
+  String ParentId;
+  int Rank;
+  String ResourceUrl;
+  String CreatedBy;
+  String Modified;
+  String Created;
   FavoriteFolder({
     required this.ID,
     required this.Title,
@@ -25,10 +26,9 @@ class FavoriteFolder {
     required this.Created,
   });
 
-
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-  
+
     result.addAll({'ID': ID});
     result.addAll({'Title': Title});
     result.addAll({'ParentId': ParentId});
@@ -37,7 +37,7 @@ class FavoriteFolder {
     result.addAll({'CreatedBy': CreatedBy});
     result.addAll({'Modified': Modified});
     result.addAll({'Created': Created});
-  
+
     return result;
   }
 
@@ -56,5 +56,6 @@ class FavoriteFolder {
 
   String toJson() => json.encode(toMap());
 
-  factory FavoriteFolder.fromJson(String source) => FavoriteFolder.fromMap(json.decode(source));
+  factory FavoriteFolder.fromJson(String source) =>
+      FavoriteFolder.fromMap(json.decode(source));
 }
