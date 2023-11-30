@@ -3,9 +3,9 @@ import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vna_dcm_flutter/src/views/login/LoginScreen.dart';
-import 'package:vna_dcm_flutter/src/widgets/LoadingWidget.dart';
+import 'package:vna_dcm_flutter/src/views/login/LoadingWidget.dart';
 
-import '../utils/Constant.dart';
+import '../utils/constant.dart';
 import '../viewmodels/login/login_bloc.dart';
 import 'dashboard/dashboard_screen.dart';
 
