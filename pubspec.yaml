@@ -51,6 +51,7 @@ dependencies:
   bottom_sheet: ^4.0.0
   floor: ^1.4.2
   sqflite: ^2.3.0
+  bottom_sheet_scaffold: ^0.1.9
 
 dev_dependencies:
   flutter_test:
