@@ -1,7 +1,7 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vna_dcm_flutter/src/repositories/apis/api_contronler.dart';
+import 'package:vna_dcm_flutter/src/utils/Constant.dart';
 import 'package:vna_dcm_flutter/src/utils/shared_preferences.dart';
 
 // Sự kiện (Event)
@@ -18,6 +18,20 @@ class LoginButtonPressed extends LoginEvent {
 
   @override
   List<Object> get props => [username, password];
+}
+
+class ReloginEvent extends LoginEvent {
+  final String username;
+  final String password;
+
+  ReloginEvent({required this.username, required this.password});
+
+  @override
+  List<Object> get props => [username, password];
+}
+
+class ReloginFailEvent extends LoginEvent {
+  ReloginFailEvent();
 }
 
 // Trạng thái (State)
@@ -43,21 +57,35 @@ class LoginFailure extends LoginState {
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(LoginState state) : super(state) {
     on<LoginButtonPressed>((event, emit) async {
+      Constant.userName = event.username;
+      Constant.passWord = event.password;
       emit(LoginLoading());
-      if (event.username == "" ||
-          event.password == "") {
-        emit(LoginFailure(error: "Username or password is null or empty"));
-      }
-      else {
-        var isAuth =await ApiController.auth(event.username, event.password);
-        if (isAuth==true) {
-            // get Data and Save data 
-            SharedPreferencesUtil().saveUserAndPassword(event.username, event.password);
+    });
+    on<ReloginEvent>(
+      (event, emit) async {
+        if (event.username == "" || event.password == "") {
+          emit(LoginFailure(error: "Username or password is null or empty"));
+        } else {
+          var isAuth = await ApiController.auth(event.username, event.password);
+          if (isAuth == true) {
+            // get Data and Save data
+            SharedPreferencesUtil()
+                .saveUserAndPassword(event.username, event.password);
             emit(LoginSuccess());
           } else {
+            Constant.userName = "";
+            Constant.passWord = "";
             emit(LoginFailure(error: "Invalid username or password"));
           }
-      }
-    });
+        }
+      },
+    );
+    on<ReloginFailEvent>(
+      (event, emit) {
+        Constant.userName = "";
+        Constant.passWord = "";
+        emit(LoginFailure(error: "Invalid username or password"));
+      },
+    );
   }
 }

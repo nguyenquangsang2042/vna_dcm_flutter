@@ -9,13 +9,16 @@ import 'package:vna_dcm_flutter/src/views/root_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // init database, client and state login 
-  await ApiService.get(
-      "api/ApiMobile.ashx?func=AdfsLogin");
-  Constant.db = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  // init database, client and state login
+  await ApiService.get("api/ApiMobile.ashx?func=AdfsLogin");
+  Constant.db =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   Constant.userName = (await SharedPreferencesUtil().getUser());
   Constant.passWord = (await SharedPreferencesUtil().getPassword());
-  LoginState state = (Constant.userName == "" || Constant.passWord == "")
+  LoginState state = (Constant.userName == "" ||
+          Constant.passWord == "" ||
+          Constant.userName == null ||
+          Constant.passWord == null)
       ? LoginFailure(error: "")
       : LoginLoading();
   runApp(MaterialApp(
