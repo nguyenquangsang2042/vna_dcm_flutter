@@ -33,7 +33,7 @@ class RootScreen extends StatelessWidget {
                     }
                   },
                   child: const Icon(
-                    Icons.arrow_back_ios,
+                    Icons.menu,
                     color: Colors.black54,
                   ),
                 ),
@@ -49,9 +49,7 @@ class RootScreen extends StatelessWidget {
         builder: (context, state) {
           if (state is LoginLoading) {
             if (Constant.userName != "" &&
-                Constant.passWord != "" &&
-                Constant.userName != null &&
-                Constant.passWord != null) {
+                Constant.passWord != "" ) {
               loginBloc.add(ReloginEvent(
                   username: Constant.userName!, password: Constant.passWord!));
             } else {
@@ -84,7 +82,6 @@ class RootScreen extends StatelessWidget {
       bottomSheet: DraggableBottomSheet(
         animationDuration: Duration(milliseconds: 200),
         body: Container(),
-        header: Container(), //header is not required
       ),
     );
   }

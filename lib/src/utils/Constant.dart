@@ -7,5 +7,5 @@ class Constant
   static late AppDatabase db; 
   static String mSite='https://vnadmsuatportal.vuthao.com';
   static String mSubsite='psd';
-  static String mDomain='$mSite/$mSubsite/';
+  static String mDomain='$mSite/$mSubsite';
 }

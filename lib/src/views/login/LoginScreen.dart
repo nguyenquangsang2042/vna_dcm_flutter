@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:vna_dcm_flutter/src/utils/constant.dart';
 import '../../viewmodels/login/login_bloc.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -58,6 +58,9 @@ class LoginScreen extends StatelessWidget {
                   height: 40,
                   child:  ElevatedButton(
                     onPressed: () {
+                      Constant.userName=_usernameController.text;
+                      Constant.passWord=_passwordController.text;
+
                       _loginBloc?.add(LoginButtonPressed(
                         username: _usernameController.text, // Replace with actual username input
                         password: _passwordController.text, // Replace with actual password input
