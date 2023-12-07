@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vna_dcm_flutter/src/repositories/apis/api_contronler.dart';
-import 'package:vna_dcm_flutter/src/utils/Constant.dart';
+import 'package:vna_dcm_flutter/src/utils/constant.dart';
+import 'package:vna_dcm_flutter/src/utils/function.dart';
 import 'package:vna_dcm_flutter/src/utils/shared_preferences.dart';
 
 // Sự kiện (Event)
@@ -69,8 +72,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           var isAuth = await ApiController.auth(event.username, event.password);
           if (isAuth == true) {
             // get Data and Save data
+            String? modified=await SharedPreferencesUtil().getModified();
             SharedPreferencesUtil()
                 .saveUserAndPassword(event.username, event.password);
+            await Future.wait([
+              ApiController.getCurrentUser().then((value) {
+                SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
+                Constant.currentUser=value!;
+              }),
+              ApiController.getListSites(modified??"").then((subSites)  {
+                Constant.db.subSiteDao.insertOrUpdate(subSites);
+              })
+            ]);
+            SharedPreferencesUtil().saveModified(Helper().getCurrentTimeFormatted());
             emit(LoginSuccess());
           } else {
             Constant.userName = "";

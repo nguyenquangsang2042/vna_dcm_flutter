@@ -28,7 +28,7 @@ Future<void> main() async {
           create: (context) => LoginBloc(state),
         ),
       ],
-      child: RootScreen(),
+      child: const RootScreen(),
     ),
   ));
 }

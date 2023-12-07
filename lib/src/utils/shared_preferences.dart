@@ -30,4 +30,24 @@ class SharedPreferencesUtil {
     await init();
     return _prefs!.getString('password');
   }
+
+  Future<void> saveCurrentUser(String data) async {
+    await init();
+    await _prefs!.setString('currentUser', data);
+  }
+
+  Future<String?> getCurrentUser() async {
+    await init();
+    return _prefs!.getString('currentUser');
+  }
+
+  Future<void> saveModified(String data) async {
+    await init();
+    await _prefs!.setString('modified', data);
+  }
+
+  Future<String?> getModified() async {
+    await init();
+    return _prefs!.getString('modified');
+  }
 }

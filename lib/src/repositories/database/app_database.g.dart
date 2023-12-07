@@ -737,13 +737,26 @@ class _$SubSiteDao extends SubSiteDao {
   _$SubSiteDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _subSiteInsertionAdapter = InsertionAdapter(
+            database,
+            'SubSite',
+            (SubSite item) => <String, Object?>{
+                  'ID': item.ID,
+                  'subSite': item.subSite,
+                  'Title': item.Title,
+                  'TitleEN': item.TitleEN,
+                  'Acronyms': item.Acronyms,
+                  'Rank': item.Rank
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<SubSite> _subSiteInsertionAdapter;
 
   @override
   Future<List<SubSite>> findAll() async {
@@ -755,5 +768,11 @@ class _$SubSiteDao extends SubSiteDao {
             TitleEN: row['TitleEN'] as String,
             Acronyms: row['Acronyms'] as String,
             Rank: row['Rank'] as int));
+  }
+
+  @override
+  Future<void> insertOrUpdate(List<SubSite> subSites) async {
+    await _subSiteInsertionAdapter.insertList(
+        subSites, OnConflictStrategy.replace);
   }
 }
