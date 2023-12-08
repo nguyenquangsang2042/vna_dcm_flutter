@@ -38,5 +38,13 @@ class ApiController {
       throw 'getListSites null';
     }
   }
+  static Future<Map<String,dynamic>> getAllMasterData(String beanName,String modified)async{
+    var res = await ApiService.get("api/ApiMobile.ashx?func=Get&Params=Modified&BeanName=$beanName&Modified=$modified");
+    if (res.data.toString().toLowerCase().contains("success")) {
+      return json.decode(res.data)['data'];
+    } else {
+      throw 'getAllMasterData null';
+    }
+  }
 
 }

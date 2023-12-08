@@ -78,10 +78,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await Future.wait([
               ApiController.getCurrentUser().then((value) {
                 SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
-                Constant.currentUser=value!;
+                Constant.currentUser=value;
               }),
               ApiController.getListSites(modified??"").then((subSites)  {
-                Constant.db.subSiteDao.insertOrUpdate(subSites);
+                Constant.db.subSiteDao.insertOrUpdate(subSites!);
+              }),
+              ApiController.getAllMasterData("DocumentAreaCategory,FavoriteFolder,DocumentType",modified??"").then((res){
+                Constant.db.documentAreaCategoryDao.insertOrUpdate(res["DocumentAreaCategory"]);
               })
             ]);
             SharedPreferencesUtil().saveModified(Helper().getCurrentTimeFormatted());
