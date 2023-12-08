@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/standard_doc_de
 abstract class StandardDocDetailDao{
   @Query('SELECT * StandardDocDetail')
   Future<List<StandardDocDetail>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<StandardDocDetail> data);
 }

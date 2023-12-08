@@ -9,5 +9,5 @@ abstract class DocumentAreaCategoryDao {
   @Query('SELECT * FROM DocumentAreaCategory')
   Future<List<DocumentAreaCategory>> findAll();
   @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> insertOrUpdate(List<DocumentAreaCategory> subSites);
+  Future<void> insertOrUpdateAll(List<DocumentAreaCategory> data);
 }

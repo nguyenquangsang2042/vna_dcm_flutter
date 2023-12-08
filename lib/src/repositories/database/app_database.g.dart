@@ -260,13 +260,31 @@ class _$DocumentAreaCategoryDao extends DocumentAreaCategoryDao {
   _$DocumentAreaCategoryDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentAreaCategoryInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentAreaCategory',
+            (DocumentAreaCategory item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'TitleEN': item.TitleEN,
+                  'Url': item.Url,
+                  'ParentId': item.ParentId,
+                  'Rank': item.Rank,
+                  'Description': item.Description,
+                  'Image': item.Image,
+                  'Created': item.Created,
+                  'Modified': item.Modified
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentAreaCategory>
+      _documentAreaCategoryInsertionAdapter;
 
   @override
   Future<List<DocumentAreaCategory>> findAll() async {
@@ -283,19 +301,40 @@ class _$DocumentAreaCategoryDao extends DocumentAreaCategoryDao {
             row['Created'] as String,
             row['Modified'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentAreaCategory> data) async {
+    await _documentAreaCategoryInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$FavoriteFolderDao extends FavoriteFolderDao {
   _$FavoriteFolderDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _favoriteFolderInsertionAdapter = InsertionAdapter(
+            database,
+            'FavoriteFolder',
+            (FavoriteFolder item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'ParentId': item.ParentId,
+                  'Rank': item.Rank,
+                  'ResourceUrl': item.ResourceUrl,
+                  'CreatedBy': item.CreatedBy,
+                  'Modified': item.Modified,
+                  'Created': item.Created
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<FavoriteFolder> _favoriteFolderInsertionAdapter;
 
   @override
   Future<List<FavoriteFolder>> findAll() async {
@@ -310,19 +349,37 @@ class _$FavoriteFolderDao extends FavoriteFolderDao {
             Modified: row['Modified'] as String,
             Created: row['Created'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<FavoriteFolder> data) async {
+    await _favoriteFolderInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentTypeDao extends DocumentTypeDao {
   _$DocumentTypeDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentTypeInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentType',
+            (DocumentType item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'TitleEN': item.TitleEN,
+                  'LangId': item.LangId,
+                  'Url': item.Url
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentType> _documentTypeInsertionAdapter;
 
   @override
   Future<List<DocumentType>> findAll() async {
@@ -334,19 +391,41 @@ class _$DocumentTypeDao extends DocumentTypeDao {
             LangId: row['LangId'] as int,
             Url: row['Url'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentType> data) async {
+    await _documentTypeInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$CommentDao extends CommentDao {
   _$CommentDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _commentInsertionAdapter = InsertionAdapter(
+            database,
+            'Comment',
+            (Comment item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'StorageCode': item.StorageCode,
+                  'Version': item.Version,
+                  'Content': item.Content,
+                  'Created': item.Created,
+                  'IsApproved': item.IsApproved,
+                  'ResourceUrl': item.ResourceUrl,
+                  'Status': item.Status
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Comment> _commentInsertionAdapter;
 
   @override
   Future<List<Comment>> findAll() async {
@@ -362,19 +441,39 @@ class _$CommentDao extends CommentDao {
             ResourceUrl: row['ResourceUrl'] as String,
             Status: row['Status'] as int));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<Comment> data) async {
+    await _commentInsertionAdapter.insertList(data, OnConflictStrategy.replace);
+  }
 }
 
 class _$ConfigNotificationDao extends ConfigNotificationDao {
   _$ConfigNotificationDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _configNotificationInsertionAdapter = InsertionAdapter(
+            database,
+            'ConfigNotification',
+            (ConfigNotification item) => <String, Object?>{
+                  'Rank': item.Rank,
+                  'Title': item.Title,
+                  'TitleEN': item.TitleEN,
+                  'ActionCategoryId': item.ActionCategoryId,
+                  'IsConfig': item.IsConfig,
+                  'EmailChecked': item.EmailChecked ? 1 : 0,
+                  'NotifyChecked': item.NotifyChecked ? 1 : 0
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ConfigNotification>
+      _configNotificationInsertionAdapter;
 
   @override
   Future<List<ConfigNotification>> findAll() async {
@@ -388,19 +487,95 @@ class _$ConfigNotificationDao extends ConfigNotificationDao {
             EmailChecked: (row['EmailChecked'] as int) != 0,
             NotifyChecked: (row['NotifyChecked'] as int) != 0));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<ConfigNotification> data) async {
+    await _configNotificationInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentDao extends DocumentDao {
   _$DocumentDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentInsertionAdapter = InsertionAdapter(
+            database,
+            'Document',
+            (Document item) => <String, Object?>{
+                  'ID': item.ID,
+                  'DocumentId': item.DocumentId,
+                  'Thumbnail': item.Thumbnail,
+                  'IssueDate': item.IssueDate,
+                  'Title': item.Title,
+                  'Url': item.Url,
+                  'IsMostViewed': item.IsMostViewed ? 1 : 0,
+                  'IsFavorite': item.IsFavorite ? 1 : 0,
+                  'TitleEN': item.TitleEN,
+                  'DocumentTypeId': item.DocumentTypeId,
+                  'DocumentGroupId': item.DocumentGroupId,
+                  'IsArchived': item.IsArchived,
+                  'StorageCode': item.StorageCode,
+                  'Status': item.Status,
+                  'LastTimeView': item.LastTimeView,
+                  'IsMostViewedL': item.IsMostViewedL ? 1 : 0,
+                  'IsNewestL': item.IsNewestL ? 1 : 0,
+                  'IsFavoriteL': item.IsFavoriteL ? 1 : 0,
+                  'AreaCategoryId': item.AreaCategoryId,
+                  'Code': item.Code,
+                  'Version': item.Version,
+                  'EffectiveStartDate': item.EffectiveStartDate,
+                  'EffectiveEndDate': item.EffectiveEndDate,
+                  'PublishDate': item.PublishDate,
+                  'Publisher': item.Publisher,
+                  'Int1': item.Int1,
+                  'Int2': item.Int2,
+                  'Int5': item.Int5,
+                  'Int6': item.Int6,
+                  'Text5': item.Text5,
+                  'Text6': item.Text6,
+                  'Text7': item.Text7,
+                  'Text11': item.Text11,
+                  'Title1': item.Title1,
+                  'DocUrl': item.DocUrl,
+                  'IsDivSection': item.IsDivSection,
+                  'DVCTBSCap1': item.DVCTBSCap1,
+                  'DVCTBSCap2': item.DVCTBSCap2,
+                  'DVCTBSCap3': item.DVCTBSCap3,
+                  'CapPCTLCap1': item.CapPCTLCap1,
+                  'CapPCTLCap2': item.CapPCTLCap2,
+                  'CapPCTLCap3': item.CapPCTLCap3,
+                  'NoiDungSuaDoi': item.NoiDungSuaDoi,
+                  'NguoiDang': item.NguoiDang,
+                  'NguoiDuyet': item.NguoiDuyet,
+                  'LoaiTL': item.LoaiTL,
+                  'FileUrl': item.FileUrl,
+                  'FileTitle': item.FileTitle,
+                  'FileID': item.FileID,
+                  'AreaCategoryTitle': item.AreaCategoryTitle,
+                  'Department2': item.Department2,
+                  'IssueDate1': item.IssueDate1,
+                  'Text8': item.Text8,
+                  'DVPhanPhoi': item.DVPhanPhoi,
+                  'NguoiXemXet': item.NguoiXemXet,
+                  'NguoiPheChuan': item.NguoiPheChuan,
+                  'NguoiChapNhan': item.NguoiChapNhan,
+                  'NguoiBienSoan': item.NguoiBienSoan,
+                  'TuVT': item.TuVT,
+                  'TuKhoa': item.TuKhoa,
+                  'ResourceCategoryId': item.ResourceCategoryId,
+                  'ResourceSubCategoryId': item.ResourceSubCategoryId,
+                  'IsPilot': item.IsPilot ? 1 : 0
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Document> _documentInsertionAdapter;
 
   @override
   Future<List<Document>> findAll() async {
@@ -470,19 +645,44 @@ class _$DocumentDao extends DocumentDao {
             ResourceSubCategoryId: row['ResourceSubCategoryId'] as int,
             IsPilot: (row['IsPilot'] as int) != 0));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<Document> data) async {
+    await _documentInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentCategoryDao extends DocumentCategoryDao {
   _$DocumentCategoryDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentCategoryInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentCategory',
+            (DocumentCategory item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'Url': item.Url,
+                  'DocumentId': item.DocumentId,
+                  'StorageCode': item.StorageCode,
+                  'AreaCategoryId': item.AreaCategoryId,
+                  'Version': item.Version,
+                  'IssueDate': item.IssueDate,
+                  'Status': item.Status,
+                  'StatusName': item.StatusName,
+                  'Code': item.Code,
+                  'Thumbnail': item.Thumbnail
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentCategory> _documentCategoryInsertionAdapter;
 
   @override
   Future<List<DocumentCategory>> findAll() async {
@@ -501,19 +701,43 @@ class _$DocumentCategoryDao extends DocumentCategoryDao {
             Code: row['Code'] as String,
             Thumbnail: row['Thumbnail'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentCategory> data) async {
+    await _documentCategoryInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentFavoriteDao extends DocumentFavoriteDao {
   _$DocumentFavoriteDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentFavoriteInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentFavorite',
+            (DocumentFavorite item) => <String, Object?>{
+                  'ID': item.ID,
+                  'ResourceTitle': item.ResourceTitle,
+                  'ResourceUrl': item.ResourceUrl,
+                  'ResourceId': item.ResourceId,
+                  'FolderId': item.FolderId,
+                  'CreatedBy': item.CreatedBy,
+                  'Modified': item.Modified,
+                  'Created': item.Created,
+                  'FolderTitle': item.FolderTitle,
+                  'Thumbnail': item.Thumbnail,
+                  'DocumentId': item.DocumentId
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentFavorite> _documentFavoriteInsertionAdapter;
 
   @override
   Future<List<DocumentFavorite>> findAll() async {
@@ -531,19 +755,46 @@ class _$DocumentFavoriteDao extends DocumentFavoriteDao {
             Thumbnail: row['Thumbnail'] as String,
             DocumentId: row['DocumentId'] as int));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentFavorite> data) async {
+    await _documentFavoriteInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentInteractiveDao extends DocumentInteractiveDao {
   _$DocumentInteractiveDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentInteractiveInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentInteractive',
+            (DocumentInteractive item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'ResourceId': item.ResourceId,
+                  'ResourceUrl': item.ResourceUrl,
+                  'Created': item.Created,
+                  'Type': item.Type,
+                  'StorageCode': item.StorageCode,
+                  'VersionShow': item.VersionShow,
+                  'DocumentType': item.DocumentType,
+                  'Department': item.Department,
+                  'IsAutoFollow': item.IsAutoFollow,
+                  'DocumentId': item.DocumentId,
+                  'Thumbnail': item.Thumbnail
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentInteractive>
+      _documentInteractiveInsertionAdapter;
 
   @override
   Future<List<DocumentInteractive>> findAll() async {
@@ -563,19 +814,35 @@ class _$DocumentInteractiveDao extends DocumentInteractiveDao {
             DocumentId: row['DocumentId'] as int,
             Thumbnail: row['Thumbnail'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentInteractive> data) async {
+    await _documentInteractiveInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentOfflineDao extends DocumentOfflineDao {
   _$DocumentOfflineDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentOfflineInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentOffline',
+            (DocumentOffline item) => <String, Object?>{
+                  'DocumentID': item.DocumentID,
+                  'Path': item.Path,
+                  'Modified': item.Modified
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentOffline> _documentOfflineInsertionAdapter;
 
   @override
   Future<List<DocumentOffline>> findAll() async {
@@ -585,19 +852,34 @@ class _$DocumentOfflineDao extends DocumentOfflineDao {
             Path: row['Path'] as String,
             Modified: row['Modified'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentOffline> data) async {
+    await _documentOfflineInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$DocumentRecentlyDao extends DocumentRecentlyDao {
   _$DocumentRecentlyDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _documentRecentlyInsertionAdapter = InsertionAdapter(
+            database,
+            'DocumentRecently',
+            (DocumentRecently item) => <String, Object?>{
+                  'documentID': item.documentID,
+                  'modified': item.modified
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DocumentRecently> _documentRecentlyInsertionAdapter;
 
   @override
   Future<List<DocumentRecently>> findAll() async {
@@ -606,19 +888,42 @@ class _$DocumentRecentlyDao extends DocumentRecentlyDao {
             documentID: row['documentID'] as int,
             modified: row['modified'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<DocumentRecently> data) async {
+    await _documentRecentlyInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$NotifyDao extends NotifyDao {
   _$NotifyDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _notifyInsertionAdapter = InsertionAdapter(
+            database,
+            'Notify',
+            (Notify item) => <String, Object?>{
+                  'ID': item.ID,
+                  'UserId': item.UserId,
+                  'Content': item.Content,
+                  'ContentEN': item.ContentEN,
+                  'Link': item.Link,
+                  'FlgRead': item.FlgRead ? 1 : 0,
+                  'flgConfirm': item.flgConfirm ? 1 : 0,
+                  'ResourceId': item.ResourceId,
+                  'Modified': item.Modified,
+                  'Created': item.Created
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Notify> _notifyInsertionAdapter;
 
   @override
   Future<List<Notify>> findAll() async {
@@ -635,19 +940,33 @@ class _$NotifyDao extends NotifyDao {
             Modified: row['Modified'] as String,
             Created: row['Created'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<Notify> data) async {
+    await _notifyInsertionAdapter.insertList(data, OnConflictStrategy.replace);
+  }
 }
 
 class _$SearchHistoryDao extends SearchHistoryDao {
   _$SearchHistoryDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _searchHistoryInsertionAdapter = InsertionAdapter(
+            database,
+            'SearchHistory',
+            (SearchHistory item) => <String, Object?>{
+                  'Title': item.Title,
+                  'Modified': item.Modified
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<SearchHistory> _searchHistoryInsertionAdapter;
 
   @override
   Future<List<SearchHistory>> findAll() async {
@@ -656,19 +975,36 @@ class _$SearchHistoryDao extends SearchHistoryDao {
             Title: row['Title'] as String,
             Modified: row['Modified'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<SearchHistory> data) async {
+    await _searchHistoryInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$StandardDocDao extends StandardDocDao {
   _$StandardDocDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _standardDocInsertionAdapter = InsertionAdapter(
+            database,
+            'StandardDoc',
+            (StandardDoc item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'TitleEN': item.TitleEN,
+                  'Rank': item.Rank
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<StandardDoc> _standardDocInsertionAdapter;
 
   @override
   Future<List<StandardDoc>> findAll() async {
@@ -679,19 +1015,35 @@ class _$StandardDocDao extends StandardDocDao {
             TitleEN: row['TitleEN'] as String,
             Rank: row['Rank'] as int));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<StandardDoc> data) async {
+    await _standardDocInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$StandardDocDashBoardDao extends StandardDocDashBoardDao {
   _$StandardDocDashBoardDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _standardDocDashBoardInsertionAdapter = InsertionAdapter(
+            database,
+            'StandardDocDashBoard',
+            (StandardDocDashBoard item) => <String, Object?>{
+                  'documentID': item.documentID,
+                  'modified': item.modified
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<StandardDocDashBoard>
+      _standardDocDashBoardInsertionAdapter;
 
   @override
   Future<List<StandardDocDashBoard>> findAll() async {
@@ -700,19 +1052,44 @@ class _$StandardDocDashBoardDao extends StandardDocDashBoardDao {
             documentID: row['documentID'] as int,
             modified: row['modified'] as String));
   }
+
+  @override
+  Future<void> insertOrUpdateAll(List<StandardDocDashBoard> data) async {
+    await _standardDocDashBoardInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
+  }
 }
 
 class _$StandardDocDetailDao extends StandardDocDetailDao {
   _$StandardDocDetailDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database);
+  )   : _queryAdapter = QueryAdapter(database),
+        _standardDocDetailInsertionAdapter = InsertionAdapter(
+            database,
+            'StandardDocDetail',
+            (StandardDocDetail item) => <String, Object?>{
+                  'ID': item.ID,
+                  'Title': item.Title,
+                  'Url': item.Url,
+                  'DocumentId': item.DocumentId,
+                  'StorageCode': item.StorageCode,
+                  'AreaCategoryId': item.AreaCategoryId,
+                  'Version': item.Version,
+                  'IssueDate': item.IssueDate,
+                  'Status': item.Status,
+                  'StatusName': item.StatusName,
+                  'Code': item.Code,
+                  'Thumbnail': item.Thumbnail
+                });
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<StandardDocDetail> _standardDocDetailInsertionAdapter;
 
   @override
   Future<List<StandardDocDetail>> findAll() async {
@@ -730,6 +1107,12 @@ class _$StandardDocDetailDao extends StandardDocDetailDao {
             StatusName: row['StatusName'] as String,
             Code: row['Code'] as String,
             Thumbnail: row['Thumbnail'] as String));
+  }
+
+  @override
+  Future<void> insertOrUpdateAll(List<StandardDocDetail> data) async {
+    await _standardDocDetailInsertionAdapter.insertList(
+        data, OnConflictStrategy.replace);
   }
 }
 
@@ -771,7 +1154,7 @@ class _$SubSiteDao extends SubSiteDao {
   }
 
   @override
-  Future<void> insertOrUpdate(List<SubSite> subSites) async {
+  Future<void> insertOrUpdateAll(List<SubSite> subSites) async {
     await _subSiteInsertionAdapter.insertList(
         subSites, OnConflictStrategy.replace);
   }

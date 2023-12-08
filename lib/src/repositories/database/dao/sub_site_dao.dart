@@ -5,5 +5,5 @@ abstract class SubSiteDao{
   @Query('SELECT * SubSite')
   Future<List<SubSite>> findAll();
   @Insert(onConflict: OnConflictStrategy.replace)
-  Future<void> insertOrUpdate(List<SubSite> subSites);
+  Future<void> insertOrUpdateAll(List<SubSite> subSites);
 }

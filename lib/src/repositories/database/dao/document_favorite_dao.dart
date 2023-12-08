@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/document_favori
 abstract class DocumentFavoriteDao{
   @Query('SELECT * FROM DocumentFavorite')
   Future<List<DocumentFavorite>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<DocumentFavorite> data);
 }

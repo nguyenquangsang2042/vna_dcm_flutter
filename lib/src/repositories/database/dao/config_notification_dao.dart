@@ -5,4 +5,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/config_notifica
 abstract class ConfigNotificationDao{
    @Query('SELECT * FROM ConfigNotification')
   Future<List<ConfigNotification>> findAll();
+   @Insert(onConflict: OnConflictStrategy.replace)
+   Future<void> insertOrUpdateAll(List<ConfigNotification> data);
 }

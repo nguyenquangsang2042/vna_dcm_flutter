@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/document_type.d
 abstract class DocumentTypeDao{
   @Query('SELECT * DocumentType')
   Future<List<DocumentType>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<DocumentType> data);
 }

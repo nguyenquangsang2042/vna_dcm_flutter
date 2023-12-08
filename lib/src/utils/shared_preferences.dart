@@ -50,4 +50,13 @@ class SharedPreferencesUtil {
     await init();
     return _prefs!.getString('modified');
   }
+  Future<void> saveSite(String data) async {
+    await init();
+    await _prefs!.setString('site', data);
+  }
+
+  Future<String?> getSite() async {
+    await init();
+    return _prefs!.getString('site');
+  }
 }

@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/document_intera
 abstract class DocumentInteractiveDao{
   @Query('SELECT * FROM DocumentInteractive')
   Future<List<DocumentInteractive>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<DocumentInteractive> data);
 }

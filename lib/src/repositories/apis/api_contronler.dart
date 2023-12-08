@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:vna_dcm_flutter/src/repositories/apis/api_service.dart';
 import 'package:vna_dcm_flutter/src/repositories/database/models/current_user.dart';
+import 'package:vna_dcm_flutter/src/repositories/database/models/standard_doc.dart';
 import 'package:vna_dcm_flutter/src/repositories/database/models/sub_site.dart';
 
 class ApiController {
@@ -44,6 +45,14 @@ class ApiController {
       return json.decode(res.data)['data'];
     } else {
       throw 'getAllMasterData null';
+    }
+  }
+  static Future<List<StandardDoc>?> getCategoryDefine()async{
+    var res = await ApiService.get("api/ApiMobile.ashx?func=GetCategoryDefine");
+    if (res.data.toString().toLowerCase().contains("success")) {
+      return List.from(json.decode(res.data)['data']).map((e) => StandardDoc.fromMap(e)).toList();
+    } else {
+      throw 'getCategoryDefine null';
     }
   }
 

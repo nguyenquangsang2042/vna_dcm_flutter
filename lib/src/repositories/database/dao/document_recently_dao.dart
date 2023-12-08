@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/document_recent
 abstract class DocumentRecentlyDao{
   @Query('SELECT * DocumentRecently')
   Future<List<DocumentRecently>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<DocumentRecently> data);
 }

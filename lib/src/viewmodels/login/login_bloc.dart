@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vna_dcm_flutter/src/repositories/apis/api_contronler.dart';
+import 'package:vna_dcm_flutter/src/repositories/database/models/document_area_category.dart';
+import 'package:vna_dcm_flutter/src/repositories/database/models/document_type.dart';
+import 'package:vna_dcm_flutter/src/repositories/database/models/favorite_folder.dart';
 import 'package:vna_dcm_flutter/src/utils/constant.dart';
 import 'package:vna_dcm_flutter/src/utils/function.dart';
 import 'package:vna_dcm_flutter/src/utils/shared_preferences.dart';
@@ -72,22 +75,74 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           var isAuth = await ApiController.auth(event.username, event.password);
           if (isAuth == true) {
             // get Data and Save data
-            String? modified=await SharedPreferencesUtil().getModified();
+            String? modified = await SharedPreferencesUtil().getModified();
             SharedPreferencesUtil()
                 .saveUserAndPassword(event.username, event.password);
-            await Future.wait([
-              ApiController.getCurrentUser().then((value) {
-                SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
-                Constant.currentUser=value;
-              }),
-              ApiController.getListSites(modified??"").then((subSites)  {
-                Constant.db.subSiteDao.insertOrUpdate(subSites!);
-              }),
-              ApiController.getAllMasterData("DocumentAreaCategory,FavoriteFolder,DocumentType",modified??"").then((res){
-                Constant.db.documentAreaCategoryDao.insertOrUpdate(res["DocumentAreaCategory"]);
-              })
-            ]);
-            SharedPreferencesUtil().saveModified(Helper().getCurrentTimeFormatted());
+            await ApiController.getCurrentUser().then((value) async {
+              SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
+              Constant.currentUser = value;
+              if (Constant.currentUser.DefaultSite
+                  .contains(Constant.baseSubsite)) {
+                await Future.wait([
+                  ApiController.getListSites(modified ?? "").then((subSites) {
+                    Constant.db.subSiteDao.insertOrUpdateAll(subSites!);
+                  }),
+                  ApiController.getAllMasterData(
+                          "DocumentAreaCategory,FavoriteFolder,DocumentType",
+                          modified ?? "")
+                      .then((res) {
+                    Constant.db.documentAreaCategoryDao.insertOrUpdateAll(
+                        List.from(res["DocumentAreaCategory"])
+                            .map((e) => DocumentAreaCategory.fromMap(e))
+                            .toList());
+                    Constant.db.favoriteFolderDao.insertOrUpdateAll(
+                        List.from(res["FavoriteFolder"])
+                            .map((e) => FavoriteFolder.fromMap(e))
+                            .toList());
+                    Constant.db.documentTypeDao.insertOrUpdateAll(
+                        List.from(res["DocumentType"])
+                            .map((e) => DocumentType.fromMap(e))
+                            .toList());
+                  })
+                ]);
+              } else {
+                String site = await SharedPreferencesUtil().getSite() ??
+                    Constant.currentUser.DefaultSite.split("/").last;
+                Constant.mSubsite = site;
+                await ApiController.getCurrentUser().then((value) async {
+                  SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
+                  Constant.currentUser = value;
+                  if (Constant.mSubsite.contains("sqd")) {
+                    await ApiController.getCategoryDefine().then((value) {});
+                  }
+                  await Future.wait([
+                    ApiController.getListSites(modified ?? "").then((subSites) {
+                      Constant.db.subSiteDao.insertOrUpdateAll(subSites!);
+                    }),
+                    ApiController.getAllMasterData(
+                            "DocumentAreaCategory,FavoriteFolder,DocumentType",
+                            modified ?? "")
+                        .then((res) {
+                      Constant.db.documentAreaCategoryDao.insertOrUpdateAll(
+                          List.from(res["DocumentAreaCategory"])
+                              .map((e) => DocumentAreaCategory.fromMap(e))
+                              .toList());
+                      Constant.db.favoriteFolderDao.insertOrUpdateAll(
+                          List.from(res["FavoriteFolder"])
+                              .map((e) => FavoriteFolder.fromMap(e))
+                              .toList());
+                      Constant.db.documentTypeDao.insertOrUpdateAll(
+                          List.from(res["DocumentType"])
+                              .map((e) => DocumentType.fromMap(e))
+                              .toList());
+                    })
+                  ]);
+                });
+              }
+              await SharedPreferencesUtil().saveSite(Constant.mSubsite);
+            });
+            SharedPreferencesUtil()
+                .saveModified(Helper().getCurrentTimeFormatted());
             emit(LoginSuccess());
           } else {
             Constant.userName = "";

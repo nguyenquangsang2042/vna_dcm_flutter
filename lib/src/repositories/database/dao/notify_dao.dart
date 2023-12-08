@@ -4,4 +4,6 @@ import 'package:vna_dcm_flutter/src/repositories/database/models/notify.dart';
 abstract class NotifyDao{
   @Query('SELECT * Notify')
   Future<List<Notify>> findAll();
+  @Insert(onConflict: OnConflictStrategy.replace)
+  Future<void> insertOrUpdateAll(List<Notify> data);
 }
