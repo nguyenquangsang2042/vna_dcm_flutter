@@ -76,7 +76,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           if(currentSite!=null)
           {
             Constant.mSubsite =currentSite!;
-            Constant.mDomain='${Constant.mSite}/${Constant.mSubsite}';
           }
           var isAuth = await ApiController.auth(Constant.mDomain,event.username, event.password);
           if (isAuth == true) {
@@ -87,7 +86,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await ApiController.getCurrentUser(Constant.mDomain).then((value) async {
               SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
               Constant.currentUser = value;
-              if (!Constant.currentUser.DefaultSite
+              if (Constant.currentUser.DefaultSite
                   .contains(Constant.baseSubsite) &&
                   currentSite !=null
               ) {
@@ -116,8 +115,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               } else {
                 String site = currentSite ??
                     Constant.currentUser.DefaultSite.split("/").last;
-                Constant.mSubsite ="sqd";
-                Constant.mDomain='${Constant.mSite}/${Constant.mSubsite}';
+                Constant.mSubsite =site;
                 print(Constant.mDomain );
                 isAuth = await ApiController.auth(Constant.mDomain,event.username, event.password);
                 if (isAuth == true) {

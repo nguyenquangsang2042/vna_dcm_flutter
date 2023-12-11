@@ -56,12 +56,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (Constant.mSubsite.contains("sqd")) {
-      BlocProvider.of<SiteBloc>(context).add(SetSite(Constant.mSubsite));
-    }
     return BlocBuilder<SiteBloc, SiteState>(
       builder: (context, state) {
-        print("a"+BlocProvider.of<SiteBloc>(context).currentSite);
         return Scaffold(
           body: pages[visit],
           bottomNavigationBar: BottomBarDefault(
