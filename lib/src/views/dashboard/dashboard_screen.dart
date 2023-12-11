@@ -9,7 +9,6 @@ import 'package:vna_dcm_flutter/src/views/home/home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
-
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -56,6 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print( Constant.mSubsite);
     return BlocBuilder<SiteBloc, SiteState>(
       builder: (context, state) {
         return Scaffold(
