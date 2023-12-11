@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/tab_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vna_dcm_flutter/src/assets/styles/app_color.dart';
+import 'package:vna_dcm_flutter/src/utils/Constant.dart';
+import 'package:vna_dcm_flutter/src/viewmodels/site/site_bloc.dart';
 import 'package:vna_dcm_flutter/src/views/home/home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -53,18 +56,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[visit],
-      bottomNavigationBar: BottomBarDefault(
-        items: items,
-        backgroundColor: AppColor.clPrimary,
-        color: Colors.white,
-        colorSelected: Colors.orange,
-        indexSelected: visit,
-        onTap: (int index) => setState(() {
-          visit = index;
-        }),
-      ),
+    if (Constant.mSubsite.contains("sqd")) {
+      BlocProvider.of<SiteBloc>(context).add(SetSite(Constant.mSubsite));
+    }
+    return BlocBuilder<SiteBloc, SiteState>(
+      builder: (context, state) {
+        print("a"+BlocProvider.of<SiteBloc>(context).currentSite);
+        return Scaffold(
+          body: pages[visit],
+          bottomNavigationBar: BottomBarDefault(
+            items: items,
+            backgroundColor: AppColor.clPrimary,
+            color: Colors.white,
+            colorSelected: Colors.orange,
+            indexSelected: visit,
+            onTap: (int index) => setState(() {
+              visit = index;
+            }),
+          ),
+        );
+      },
     );
   }
 }

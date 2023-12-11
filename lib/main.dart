@@ -5,12 +5,13 @@ import 'package:vna_dcm_flutter/src/repositories/database/app_database.dart';
 import 'package:vna_dcm_flutter/src/utils/constant.dart';
 import 'package:vna_dcm_flutter/src/utils/shared_preferences.dart';
 import 'package:vna_dcm_flutter/src/viewmodels/login/login_bloc.dart';
+import 'package:vna_dcm_flutter/src/viewmodels/site/site_bloc.dart';
 import 'package:vna_dcm_flutter/src/views/root_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // init database, client and state login
-  await ApiService.get("api/ApiMobile.ashx?func=AdfsLogin");
+  await ApiService.get("${Constant.mDomain}/api/ApiMobile.ashx?func=AdfsLogin");
   Constant.db =
       await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   Constant.userName = (await SharedPreferencesUtil().getUser());
@@ -27,6 +28,7 @@ Future<void> main() async {
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(state),
         ),
+        BlocProvider<SiteBloc>(create: (context) => SiteBloc(),)
       ],
       child: const RootScreen(),
     ),

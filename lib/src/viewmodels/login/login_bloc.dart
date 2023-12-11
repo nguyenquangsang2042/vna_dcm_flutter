@@ -72,22 +72,30 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (event.username == "" || event.password == "") {
           emit(LoginFailure(error: "Username or password is null or empty"));
         } else {
-          var isAuth = await ApiController.auth(event.username, event.password);
+          String? currentSite = await SharedPreferencesUtil().getSite();
+          if(currentSite!=null)
+          {
+            Constant.mSubsite =currentSite!;
+            Constant.mDomain='${Constant.mSite}/${Constant.mSubsite}';
+          }
+          var isAuth = await ApiController.auth(Constant.mDomain,event.username, event.password);
           if (isAuth == true) {
             // get Data and Save data
             String? modified = await SharedPreferencesUtil().getModified();
             SharedPreferencesUtil()
                 .saveUserAndPassword(event.username, event.password);
-            await ApiController.getCurrentUser().then((value) async {
+            await ApiController.getCurrentUser(Constant.mDomain).then((value) async {
               SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
               Constant.currentUser = value;
-              if (Constant.currentUser.DefaultSite
-                  .contains(Constant.baseSubsite)) {
+              if (!Constant.currentUser.DefaultSite
+                  .contains(Constant.baseSubsite) &&
+                  currentSite !=null
+              ) {
                 await Future.wait([
-                  ApiController.getListSites(modified ?? "").then((subSites) {
+                  ApiController.getListSites(Constant.mDomain,modified ?? "").then((subSites) {
                     Constant.db.subSiteDao.insertOrUpdateAll(subSites!);
                   }),
-                  ApiController.getAllMasterData(
+                  ApiController.getAllMasterData(Constant.mDomain,
                           "DocumentAreaCategory,FavoriteFolder,DocumentType",
                           modified ?? "")
                       .then((res) {
@@ -106,38 +114,48 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
                   })
                 ]);
               } else {
-                String site = await SharedPreferencesUtil().getSite() ??
+                String site = currentSite ??
                     Constant.currentUser.DefaultSite.split("/").last;
-                Constant.mSubsite = site;
-                await ApiController.getCurrentUser().then((value) async {
-                  SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
-                  Constant.currentUser = value;
-                  if (Constant.mSubsite.contains("sqd")) {
-                    await ApiController.getCategoryDefine().then((value) {});
-                  }
-                  await Future.wait([
-                    ApiController.getListSites(modified ?? "").then((subSites) {
-                      Constant.db.subSiteDao.insertOrUpdateAll(subSites!);
-                    }),
-                    ApiController.getAllMasterData(
-                            "DocumentAreaCategory,FavoriteFolder,DocumentType",
-                            modified ?? "")
-                        .then((res) {
-                      Constant.db.documentAreaCategoryDao.insertOrUpdateAll(
-                          List.from(res["DocumentAreaCategory"])
-                              .map((e) => DocumentAreaCategory.fromMap(e))
-                              .toList());
-                      Constant.db.favoriteFolderDao.insertOrUpdateAll(
-                          List.from(res["FavoriteFolder"])
-                              .map((e) => FavoriteFolder.fromMap(e))
-                              .toList());
-                      Constant.db.documentTypeDao.insertOrUpdateAll(
-                          List.from(res["DocumentType"])
-                              .map((e) => DocumentType.fromMap(e))
-                              .toList());
-                    })
-                  ]);
-                });
+                Constant.mSubsite ="sqd";
+                Constant.mDomain='${Constant.mSite}/${Constant.mSubsite}';
+                print(Constant.mDomain );
+                isAuth = await ApiController.auth(Constant.mDomain,event.username, event.password);
+                if (isAuth == true) {
+                  await ApiController.getCurrentUser(Constant.mDomain).then((value) async {
+                    SharedPreferencesUtil().saveCurrentUser(json.encode(value!));
+                    Constant.currentUser = value;
+                    if (Constant.mSubsite.contains("sqd")) {
+                      await ApiController.getCategoryDefine(Constant.mDomain).then((value) {});
+                    }
+                    await Future.wait([
+                      ApiController.getListSites(Constant.mDomain,modified ?? "").then((subSites) {
+                        Constant.db.subSiteDao.insertOrUpdateAll(subSites!);
+                      }),
+                      ApiController.getAllMasterData(Constant.mDomain,
+                          "DocumentAreaCategory,FavoriteFolder,DocumentType",
+                          modified ?? "")
+                          .then((res) {
+                        Constant.db.documentAreaCategoryDao.insertOrUpdateAll(
+                            List.from(res["DocumentAreaCategory"])
+                                .map((e) => DocumentAreaCategory.fromMap(e))
+                                .toList());
+                        Constant.db.favoriteFolderDao.insertOrUpdateAll(
+                            List.from(res["FavoriteFolder"])
+                                .map((e) => FavoriteFolder.fromMap(e))
+                                .toList());
+                        Constant.db.documentTypeDao.insertOrUpdateAll(
+                            List.from(res["DocumentType"])
+                                .map((e) => DocumentType.fromMap(e))
+                                .toList());
+                      })
+                    ]);
+                  });
+                }
+                else {
+                  Constant.userName = "";
+                  Constant.passWord = "";
+                  emit(LoginFailure(error: "Invalid username or password"));
+                }
               }
               await SharedPreferencesUtil().saveSite(Constant.mSubsite);
             });
